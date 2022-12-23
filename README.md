@@ -191,3 +191,5 @@ Format has 4 options:
 
 Example:
 .\spectrumview.cpp 'C://Users/ID/Documents/Experiments/EELS Map files' all integrated 3 map_one 0.096
+   
+ The Map.zip is a test folder that can be used with spectrum_view.cpp
