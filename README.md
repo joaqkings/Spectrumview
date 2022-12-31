@@ -30,7 +30,7 @@ As mentioned above, this program uses the header file "spectrum_map.hpp" where i
 ## **Using spectrumview**
 
 The general syntax to run the program is:
-`.\spectrumview + 'Path to directory' +  format + intensity_mode + channels (only for integrated mode) + output_file + energy`
+```.\spectrumview + 'Path to directory' +  format + intensity_mode + channels (only for integrated mode) + output_file + energy```
 
 ### **Getting an spectrum map with intensity extracted by the linear interpolation method**
 
