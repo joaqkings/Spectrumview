@@ -6,7 +6,6 @@
  * @brief spectrum_map: A library for image processing from data acquisition in spatially resolved spectroscopy. This header file contains the main classes spectra and data_map, the input/output functions and the BMP file generator.
  * @version 0.1
  * @date 2022-12-23
- *
  * @copyright Copyright (c) 2022
  *
  */
@@ -54,6 +53,7 @@ std::vector<fs::path> opendirectory(const std::string &path)
 
 /**
  * @brief Reads an individual data file to create the containers for the energy/frequency or intensity axis.
+ *
  * @param path The path to the file where the information will be extracted. If you are using spectrumview, the program creates this path.
  * @param axis The axis to be returned. Can be either "energy" or "intensity".
  * @return Returns a vector containing the energy or intensity values. If an error occurs, terminates the program.
@@ -117,8 +117,8 @@ std::vector<double> readfile(const fs::path &path, const std::string &axis)
 }
 
 /**
- * @brief Identifies the coordinates where the spectrum was acquired from the filename.
- * Format of filename must be 'file_id-x_coordinate-y_coordinate.extension'.
+ * @brief Identifies the coordinates where the spectrum was acquired from the filename. Format of filename must be 'file_id-x_coordinate-y_coordinate.extension'.
+ *
  * @param path The path to the file where the information will be extracted. If you are using spectrumview, the program creates this path.
  * @param coordinate Specify wether the ordinate or abscissa. Can be either "x" or "y".
  * @return Returns a double with the coordinate value required.
@@ -191,7 +191,6 @@ double findcoords(const fs::path &path, const std::string &coordinate)
 //                                           Begin class spectrum                                         //
 /**
  * @brief Class to store the information from the data files. Contains the energy, intensity and spatial location.
- *
  */
 class spectrum
 {
@@ -211,8 +210,8 @@ public:
     }
 
     /**
-     * @brief Extracts the intensity at a given energy by locating the nearest upper value and adding the intensities
-     * from contiguous specified amount of pixels. If energy is first or last value only channels within the axis are considered.
+     * @brief Extracts the intensity at a given energy by locating the nearest upper value and adding the intensities from contiguous specified amount of pixels. If energy is first or last value only channels within the axis are considered.
+     *
      * @param energy Energy to be mapped.
      * @param channels The amount of channels to integrate per side.
      * @return Returns a long float with the result of the sum of the intensities for each channel that was considered.
@@ -290,7 +289,6 @@ public:
         return int_intensity;
     }
 
-    // Function to declare the x or y coordinates that were extracted from the filename
     /**
      * @brief Prints either the x or the y coordinate as requested. This is handled by spectrumview.cpp.
      *
@@ -317,22 +315,18 @@ public:
 private:
     /**
      * @brief Vector to store the energy/frequency values.
-     *
      */
     std::vector<double> energy_ax;
     /**
      * @brief Vector to store the intensity values.
-     *
      */
     std::vector<double> intensity;
     /**
      * @brief Variables to store the x-coordinate.
-     *
      */
     double pos_x = 0;
     /**
      * @brief Variables to store the y-coordinate.
-     *
      */
     double pos_y = 0;
 };
@@ -342,9 +336,7 @@ private:
 //                                            Begin class data_map                                        //
 
 /**
- * @brief Class to create the energy map. Can provide a raw map with a "pixel" per point acquired, or a map with added
- * pixels to improve aspect.
- *
+ * @brief Class to create the energy map. Can provide a raw map with a "pixel" per point acquired, or a map with added pixels to improve aspect.
  */
 class data_map
 {
@@ -448,8 +440,6 @@ public:
             throw std::invalid_argument("Can't access requested dimension.");
     }
 
-    // Returns a flattened matrix with a formatted map with even pixel size.
-
     /**
      * @brief Creates a matrix with the intensities extracted from the files, and adds pixels to create a uniform pixel size and to allow the build of a BMP figure.
      *
@@ -513,10 +503,6 @@ public:
             raw_x = 0;
             m = 0;
         }
-
-        // std::vector<double>::iterator maximum_value = std::max_element(formatted_grid.begin(), formatted_grid.end());
-        // for (std::vector<double>::iterator i = formatted_grid.begin(); i < formatted_grid.end(); i++)
-        //     *i /= *maximum_value;
         return formatted_grid;
     }
 
@@ -567,8 +553,7 @@ private:
 //                                           Begin class BmpHeader                                          //
 
 /**
- * @brief Class to create BMP file metadata. Build based on a tutorial from https://dev.to/muiz6/c-how-to-write-a-bitmap-image-from-scratch-1k6m
- * (No lines were copied, but it was used as a guide for the information required)
+ * @brief Class to create BMP file metadata. Build based on a tutorial from https://dev.to/muiz6/c-how-to-write-a-bitmap-image-from-scratch-1k6m (No lines were copied, but it was used as a guide for the information required)
  */
 class BmpHeader
 {
@@ -584,6 +569,11 @@ public:
         if (width > INT32_MAX or length > INT32_MAX)
         {
             std::cout << "Map dimensions might result in unexpected behavior. Get formatted map with external argument";
+            exit(0);
+        }
+        else if (width % 4 != 0 or length % 4 != 0)
+        {
+            std::cout << "Dimensions are not allowed for BMP";
             exit(0);
         }
         uint32_t size_of_map = static_cast<uint32_t>(width * length);
@@ -616,8 +606,7 @@ private:
 //                                         Begin class BmpInfoHeader                                         //
 
 /**
- * @brief Class to create BMP file metadata. Build based on a tutorial from https://dev.to/muiz6/c-how-to-write-a-bitmap-image-from-scratch-1k6m
- * (No lines were copied, but it was used as a guide for the information required)
+ * @brief Class to create BMP file metadata. Build based on a tutorial from https://dev.to/muiz6/c-how-to-write-a-bitmap-image-from-scratch-1k6m (No lines were copied, but it was used as a guide for the information required)
  */
 class BmpInfoHeader
 {
@@ -768,12 +757,9 @@ void external_plot_axis(std::vector<double> &x, std::vector<double> &y, std::str
     std::cout << "Created file:" << filename1 << " with y-axis handles to plot image externally." << '\n';
 }
 
-// Function to build a bitmap out of a formatted map
-//
-
 /**
- * @brief Creates a binary BMP file. Build based on a tutorial from https://dev.to/muiz6/c-how-to-write-a-bitmap-image-from-scratch-1k6m
- * (No lines were copied, but it was used as a guide for the information required)
+ * @brief Creates a binary BMP file. Build based on a tutorial from https://dev.to/muiz6/c-how-to-write-a-bitmap-image-from-scratch-1k6m (No lines were copied, but it was used as a guide for the information required)
+ *
  * @param intensity Map values to set the colour of the image.
  * @param width Calculated width in pixels from the class data_map function.
  * @param length Calculated height in pixels from the class data_map function.

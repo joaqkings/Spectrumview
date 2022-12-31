@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
 
             if (!std::strcmp(argv[2], "raw") or !std::strcmp(argv[2], "all"))
             {
-                std::string raw_title = project_title + "raw";
+                std::string raw_title = project_title + "-raw";
                 std::vector<double> map = spectra_map.show_raw();
                 uint64_t width = spectra_map.show_dimensions("width");
                 std::cout << "Raw width is: " << width << '\n';
@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
 
             if (!std::strcmp(argv[2], "grid") or !std::strcmp(argv[2], "all") or !std::strcmp(argv[2], "bmp"))
             {
-                std::string grid_title = project_title + "grid";
+                std::string grid_title = project_title + "-grid";
                 std::vector<double> formatted_map = spectra_map.show_formatted_grid();
                 uint64_t width = spectra_map.show_formatted_dimensions("width");
                 std::cout << "Formatted width is: " << width << '\n';
