@@ -63,7 +63,7 @@ The syntax for the command line is the following:
 
 Example:
 
-```./spectrumview 'C://Users/ID/Documents/Experiments/EELS Map files' all interpolated EELS_map_example 0.035```
+```./spectrumview 'C:/Users/ID/Documents/Experiments/EELS Map files' all interpolated EELS_map_example 0.035```
 
 In this case, 5 output files will be created: the raw map as a matrix in a text file, the x and y axis values as two separate text files, the formatted map as a matrix in a different text file and the BMP file with the RGB figure. Both maps intensities are defined from an interpolation to get the intensity at 0.096 eV.
 
@@ -98,7 +98,7 @@ In this case, 5 output files will be created: the raw map as a matrix in a text 
 
 Example:
 
-```./spectrumview.cpp 'C://Users/ID/Documents/Experiments/EELS Map files' bmp integrated 3 map_one 0.096```
+```./spectrumview.cpp 'C:/Users/ID/Documents/Experiments/EELS Map files' bmp integrated 3 map_one 0.096```
 
 For this example, the integration window will consider 3 energy values above and 3 energy values below 0.096 eV assuming that the energy axis goes from 0 to 1 in steps of 0.005 eV. The output file will be the bitmap.
 
