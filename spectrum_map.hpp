@@ -63,7 +63,7 @@ std::vector<double> readfile(const fs::path &path, const std::string &axis)
     std::ifstream path_input(path);
     if (!path_input.is_open())
     {
-        std::cout << "Can't open this file!";
+        std::cout << "Can't open a file!:" << path.string();
         exit(0);
     }
 
@@ -75,31 +75,31 @@ std::vector<double> readfile(const fs::path &path, const std::string &axis)
         {
             if (isalpha(c))
             {
-                throw std::invalid_argument("Error reading the file: Eliminate alphabetic characters from the energy values.");
+                throw std::invalid_argument("Error reading the file " + path.string() + ": Eliminate alphabetic characters from the energy values.");
             }
             else if (ispunct(c))
             {
                 if (c == '-' or c == '.')
                     continue;
                 else
-                    throw std::invalid_argument("Error reading the file: Eliminate punctuation characters. Only negation '-' at the beginning or a single point '.' for a float are allowed.");
+                    throw std::invalid_argument("Error reading the file " + path.string() + ": Eliminate punctuation characters. Only negation '-' at the beginning or a single point '.' for a float are allowed.");
             }
             else if (isspace(c) and std::count(line.begin(), line.end(), ' ') != 1)
             {
-                throw std::invalid_argument("Error reading the file: Eliminate spaces within the values or eliminate additional values, each line should have only a pair of values separated by spaces.");
+                throw std::invalid_argument("Error reading the file " + path.string() + ": Eliminate spaces within the values or eliminate additional values, each line should have only a pair of values separated by spaces.");
             }
         }
         uint64_t tab = line.find(' ');
         if (std::count(line.begin(), line.end(), ' ') > 1)
         {
-            throw std::invalid_argument("Error reading the file. There might be more than two elements per line or spaces at the end of a line");
+            throw std::invalid_argument("Error reading the file " + path.string() + ". There might be more than two elements per line or spaces at the end of a line");
             exit(0);
         }
         if (!axis.find("energy"))
         {
             std::string energy = line.substr(0, tab);
             if ((energy.find('-') != 0 and energy.find('-') != std::string::npos) or std::count(energy.begin(), energy.end(), '-') > 1 or std::count(energy.begin(), energy.end(), '.') > 1)
-                throw std::invalid_argument("Error reading the file: Eliminate punctuation characters. Only negation '-' at the beginning or a single point '.' for a float are allowed.");
+                throw std::invalid_argument("Error reading the file " + path.string() + ": Eliminate punctuation characters. Only negation '-' at the beginning or a single point '.' for a float are allowed.");
             else
                 axis_container.push_back(stod(energy));
         }
@@ -107,12 +107,17 @@ std::vector<double> readfile(const fs::path &path, const std::string &axis)
         {
             std::string intensity = line.substr(tab + 1, line.size());
             if ((intensity.find('-') != 0 and intensity.find('-') != std::string::npos) or std::count(intensity.begin(), intensity.end(), '-') > 1 or std::count(intensity.begin(), intensity.end(), '.') > 1)
-                throw std::invalid_argument("Error reading the file: Eliminate punctuation characters. Only negation '-' at the beginning or a single point '.' for a float are allowed.");
+                throw std::invalid_argument("Error reading the file " + path.string() + ": Eliminate punctuation characters. Only negation '-' at the beginning or a single point '.' for a float are allowed.");
             else
                 axis_container.push_back(stod(intensity));
         }
     }
     path_input.close();
+    if (axis_container.empty())
+    {
+        std::cout << "An error occurred while reading the file " + path.string() + ": File may be empty! ";
+        exit(0);
+    }
     return axis_container;
 }
 
@@ -137,7 +142,7 @@ double findcoords(const fs::path &path, const std::string &coordinate)
         for (std::string::iterator i = _x.begin(); i < _x.end(); i++)
         {
             if (ispunct(*i))
-                throw std::invalid_argument("Unrecognized character for x position in file name");
+                throw std::invalid_argument("Unrecognized character for x position in file: " + path.string());
             else if (isalpha(*i))
             {
                 uint64_t start = _x.find(*i);
@@ -153,7 +158,7 @@ double findcoords(const fs::path &path, const std::string &coordinate)
             }
         }
         if (_x.empty())
-            throw std::invalid_argument("No value specified for position x");
+            throw std::invalid_argument("No value specified for position x inf file: " + path.string());
         else
             return stod(_x);
     }
@@ -162,7 +167,7 @@ double findcoords(const fs::path &path, const std::string &coordinate)
         for (std::string::iterator i = _y.begin(); i < _y.end(); i++)
         {
             if (ispunct(*i))
-                throw std::invalid_argument("Unrecognized character for y position in file name");
+                throw std::invalid_argument("Unrecognized character for y position in file: " + path.string());
             else if (isalpha(*i))
             {
                 uint64_t start = _y.find(*i);
@@ -178,7 +183,7 @@ double findcoords(const fs::path &path, const std::string &coordinate)
             }
         }
         if (_y.empty())
-            throw std::invalid_argument("No value specified for position y");
+            throw std::invalid_argument("No value specified for position y in file: " + path.string());
         else
             return stod(_y);
     }
@@ -224,7 +229,7 @@ public:
         size_t upper_limit;
         if (energy_ax[0] > energy or energy > energy_ax[energy_ax.size() - 1])
         {
-            std::cout << "Error: Requested energy value was not found.";
+            std::cout << "Error: Requested energy value was not found. A file may not contain the energy value you requested.";
             exit(0);
         }
         for (uint64_t i = 0; i < energy_ax.size(); i++)
@@ -271,7 +276,7 @@ public:
         size_t upper_limit;
         if (energy_ax[0] > energy or energy > energy_ax[energy_ax.size() - 1])
         {
-            std::cout << "Error: Requested energy value was not found.";
+            std::cout << "Error: Requested energy value was not found. A file may not contain the energy value you requested.";
             exit(0);
         }
         for (uint64_t i = 0; i < energy_ax.size(); i++)
@@ -447,9 +452,14 @@ public:
      */
     std::vector<double> show_formatted_grid()
     {
+        if (x_handle.at(0) != 0 or y_handle.at(0) != 0)
+        {
+            std::cout << "Please note that if the initial point of coordinates is not (0,0) unusual behaviour may occur with the bitmap and formatted grid on this release." << '\n'
+                      << "Future work will look for a way to fix such inconvenience." << '\n';
+        }
 
-        uint32_t width = (uint32_t)x_handle.at((size_t)std::distance(x_handle.begin(), std::max_element(x_handle.begin(), x_handle.end()))) / x_step.at((size_t)std::distance(x_step.begin(), std::min_element(x_step.begin(), x_step.end())));
-        uint32_t length = (uint32_t)y_handle.at((size_t)std::distance(y_handle.begin(), std::max_element(y_handle.begin(), y_handle.end()))) / y_step.at((size_t)std::distance(y_step.begin(), std::min_element(y_step.begin(), y_step.end())));
+        uint32_t width = (((uint32_t)x_handle.at((size_t)std::distance(x_handle.begin(), std::max_element(x_handle.begin(), x_handle.end()))) - (uint32_t)x_handle.at((size_t)std::distance(x_handle.begin(), std::min_element(x_handle.begin(), x_handle.end())))) / x_step.at((size_t)std::distance(x_step.begin(), std::min_element(x_step.begin(), x_step.end())))) + 1;
+        uint32_t length = (((uint32_t)y_handle.at((size_t)std::distance(y_handle.begin(), std::max_element(y_handle.begin(), y_handle.end()))) - (uint32_t)y_handle.at((size_t)std::distance(y_handle.begin(), std::min_element(y_handle.begin(), y_handle.end())))) / y_step.at((size_t)std::distance(y_step.begin(), std::min_element(y_step.begin(), y_step.end())))) + 1;
 
         if (width % 4 != 0)
         {
@@ -465,7 +475,7 @@ public:
         for (std::vector<uint32_t>::iterator i = x_step.begin(); i < x_step.end(); i++)
         {
 
-            uint32_t pixel_step = (*i * width) / (uint32_t)x_handle.at((size_t)std::distance(x_handle.begin(), std::max_element(x_handle.begin(), x_handle.end())));
+            uint32_t pixel_step = (*i * width) / ((uint32_t)x_handle.at((size_t)std::distance(x_handle.begin(), std::max_element(x_handle.begin(), x_handle.end()))) - (uint32_t)x_handle.at((size_t)std::distance(x_handle.begin(), std::min_element(x_handle.begin(), x_handle.end()))));
             accumulated += pixel_step;
             x_pixel_step.push_back(accumulated);
         }
@@ -474,7 +484,7 @@ public:
         accumulated = 0;
         for (std::vector<uint32_t>::iterator i = y_step.begin(); i < y_step.end(); i++)
         {
-            uint32_t pixel_step = (*i * length) / (uint32_t)y_handle.at((size_t)std::distance(y_handle.begin(), std::max_element(y_handle.begin(), y_handle.end())));
+            uint32_t pixel_step = (*i * length) / ((uint32_t)y_handle.at((size_t)std::distance(y_handle.begin(), std::max_element(y_handle.begin(), y_handle.end()))) - (uint32_t)y_handle.at((size_t)std::distance(y_handle.begin(), std::min_element(y_handle.begin(), y_handle.end()))));
             accumulated += pixel_step;
             y_pixel_step.push_back(accumulated);
         }
@@ -516,7 +526,7 @@ public:
     {
         if (size_direction == "width")
         {
-            uint32_t width = (uint32_t)x_handle.at((size_t)std::distance(x_handle.begin(), std::max_element(x_handle.begin(), x_handle.end()))) / x_step.at((size_t)std::distance(x_step.begin(), std::min_element(x_step.begin(), x_step.end())));
+            uint32_t width = (((uint32_t)x_handle.at((size_t)std::distance(x_handle.begin(), std::max_element(x_handle.begin(), x_handle.end()))) - (uint32_t)x_handle.at((size_t)std::distance(x_handle.begin(), std::min_element(x_handle.begin(), x_handle.end())))) / x_step.at((size_t)std::distance(x_step.begin(), std::min_element(x_step.begin(), x_step.end())))) + 1;
 
             if (width % 4 != 0)
             {
@@ -526,7 +536,7 @@ public:
         }
         else if (size_direction == "length")
         {
-            uint32_t length = (uint32_t)y_handle.at((size_t)std::distance(y_handle.begin(), std::max_element(y_handle.begin(), y_handle.end()))) / y_step.at((size_t)std::distance(y_step.begin(), std::min_element(y_step.begin(), y_step.end())));
+            uint32_t length = (((uint32_t)y_handle.at((size_t)std::distance(y_handle.begin(), std::max_element(y_handle.begin(), y_handle.end()))) - (uint32_t)y_handle.at((size_t)std::distance(y_handle.begin(), std::min_element(y_handle.begin(), y_handle.end())))) / y_step.at((size_t)std::distance(y_step.begin(), std::min_element(y_step.begin(), y_step.end())))) + 1;
 
             if (length % 4 != 0)
             {

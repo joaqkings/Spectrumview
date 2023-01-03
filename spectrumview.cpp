@@ -4,9 +4,7 @@
  * @brief A program using the header file spectrum_map to get either files to plot spatially resolved spectra as a BMP file in other languages or software
  * @version 0.1
  * @date 2022-12-23
- *
  * @copyright Copyright (c) 2022
- *
  */
 
 #include <iostream>
@@ -38,20 +36,19 @@ int main(int argc, char *argv[])
                       << "\nOutput file name will be modified with details of the energy and type of output" << '\n'
                       << "\nThe final value correspond to the energy of interest. " << '\n'
                       << "\nExample:" << '\n'
-                      << "\n./spectrumview 'C:/Users/Scientist/EELS' All Integrated 2 EELS_Spectrum_map 0.035" << '\n';
+                      << "\n./spectrumview 'C:/Users/Scientist/EELS' all integrated 2 EELS_Spectrum_map 0.035" << '\n';
         }
         else if (argc > 1 and argc < 6)
         {
-            std::cout << "Not enough arguments to run the program" << '\n';
+            std::cout << "Not enough arguments to run the program" << '\n'
+                      << "To create raw files and bitmap syntax is:" << '\n'
+                      << "\n./spectrumview + 'Path to directory' + Format + Intensity mode + Output file name + Energy of interest" << '\n'
+                      << "\nWrite ./spectrumview to get a command line example or read the documentation " << '\n';
             exit(0);
         }
-        else if (argc == 6)
+        else if (argc == 6 and !std::strcmp(argv[3], "interpolated"))
         {
 
-            if (!std::strcmp(argv[3], "integrated"))
-            {
-                throw std::invalid_argument("Input in terminal has unrecognized intensity mode! Can only be interpolated");
-            }
             std::string energy = argv[5];
             for (std::string::iterator c = energy.begin(); c < energy.end(); c++)
             {
@@ -184,6 +181,14 @@ int main(int argc, char *argv[])
                 if (!std::strcmp(argv[2], "bmp") or !std::strcmp(argv[2], "all"))
                     build_bitmap(formatted_map, width, height, project_title);
             }
+        }
+        else
+        {
+            std::cout << "Command line input is not recognized" << '\n'
+                      << "Make sure that there is no additional arguments on your instruction" << '\n'
+                      << "Modes can only be interpolated or integrated" << '\n'
+                      << "Run the program without command lines to see an example or check the documentation" << '\n';
+            exit(0);
         }
     }
     catch (std::invalid_argument const &e)

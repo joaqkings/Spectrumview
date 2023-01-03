@@ -21,23 +21,24 @@ Spectrum view is an image processing tool to create spectrum maps out of point b
      * If the raw matrix is requested 3 files will be created: one with the 2D matrix with fixed width columns, and two with the x and y axis values to properly define the dimensions. The reason of this, is that in some experiments the step size can be uneven and if there is no information about the size scale the map will not be spatially accurate even if it contains the proper information.
      * If the formatted matrix is requested, the program creates a 2D matrix with even step size (pixel size) and with dimensions that have the appropriate values to be turned into a bitmap (the row and column dimensions are multiples of 4).* To fill the formatted 2D matrix with the information coming from the intensity of the raw map, the real dimensions are considered, every pixel has the intensity value from the lower position between the closest raw map position values for a given pixel.  
   The output '.txt' file will be the 2D matrix with fixed width columns, since the dimensions are adjusted in terms of a pixel size, no axis values are needed to get the correct proportions from the image.
-   * The BMP file can only come from the formatted matrix, and provides the image processed as a bitmap, the color is set to show orange shades depending on the intensity values.
+   * The BMP file can only come from the formatted matrix, and provides the image processed as a bitmap, the color is set to show orange shades depending on the intensity values, although black and some other colors may appear under certain conditions.
 
-***NOTE**: The aspect ratio might be slightly different if one of the dimensions is a multiple of 4 and the other one is not.
+***NOTE 1**: The aspect ratio might be slightly different if one of the dimensions is a multiple of 4 and the other one is not.
+
+***NOTE 2**: In this release the coordinate map should have one point at the coordinate (0,0) to avoid unusual behavior. Future work aims to fix this inconvenience in a future version.
 
 As mentioned above, this program uses the header file "spectrum_map.hpp" where input, output and processing functions are written. The header file can be used independently for custom software if desired.
 
 ## **Using spectrumview**
 
 The general syntax to run the program is:
-
-```.\spectrumview + 'Path to directory' +  format + intensity_mode + channels (only for integrated mode) + output_file + energy```
+`./spectrumview + 'Path to directory' +  format + intensity_mode + channels (only for integrated mode) + output_file + energy`
 
 ### **Getting an spectrum map with intensity extracted by the linear interpolation method**
 
 The syntax for the command line is the following:
 
-`.\spectrumview + 'Path to directory' +  format + interpolated + output_file + energy`
+`./spectrumview + 'Path to directory' +  format + interpolated + output_file + energy`
 
 1. 'Path to directory': Must be a path to a directory not to a file, where all the acquired spectra for the map is stored.
 
@@ -61,13 +62,13 @@ The syntax for the command line is the following:
 
 Example:
 
-```.\spectrumview 'C://Users/ID/Documents/Experiments/EELS Map files' all interpolated EELS_map_example 0.035```
+```./spectrumview 'C://Users/ID/Documents/Experiments/EELS Map files' all interpolated EELS_map_example 0.035```
 
 In this case, 5 output files will be created: the raw map as a matrix in a text file, the x and y axis values as two separate text files, the formatted map as a matrix in a different text file and the BMP file with the RGB figure. Both maps intensities are defined from an interpolation to get the intensity at 0.096 eV.
 
 **Syntax for extraction with integrated_intensity:**
 
-`.\spectrumview.cpp + 'Path to directory' +  format + integrated + channels + output_file + energy`
+`./spectrumview + 'Path to directory' +  format + integrated + channels + output_file + energy`
 
 1. 'Path to directory': Must be a path to a directory not to a file.
 
@@ -96,7 +97,7 @@ In this case, 5 output files will be created: the raw map as a matrix in a text 
 
 Example:
 
-```.\spectrumview.cpp 'C://Users/ID/Documents/Experiments/EELS Map files' bmp integrated 3 map_one 0.096```
+```./spectrumview.cpp 'C://Users/ID/Documents/Experiments/EELS Map files' bmp integrated 3 map_one 0.096```
 
 For this example, the integration window will consider 3 energy values above and 3 energy values below 0.096 eV assuming that the energy axis goes from 0 to 1 in steps of 0.005 eV. The output file will be the bitmap.
 
