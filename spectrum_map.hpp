@@ -95,6 +95,11 @@ std::vector<double> readfile(const fs::path &path, const std::string &axis)
             throw std::invalid_argument("Error reading the file " + path.string() + ". There might be more than two elements per line or spaces at the end of a line");
             exit(0);
         }
+        else if (tab == line.size() - 1 or tab == std::string::npos)
+        {
+            std::cout << "File " + path.string() + " is missing one or more values in a column.";
+            exit(0);
+        }
         if (!axis.find("energy"))
         {
             std::string energy = line.substr(0, tab);
