@@ -460,6 +460,7 @@ public:
         if (x_handle.at(0) != 0 or y_handle.at(0) != 0)
         {
             std::cout << "Please note that if no point exists for coordinates (0,0), unusual behaviour may occur with the bitmap and formatted grid on this release." << '\n'
+                      << "Lost of information may occur!" << '\n'
                       << "Future work will look for a way to fix such inconvenience." << '\n';
         }
 
@@ -518,6 +519,10 @@ public:
             raw_x = 0;
             m = 0;
         }
+
+        double maximum = formatted_grid.at((size_t)std::distance(formatted_grid.begin(), std::max_element(formatted_grid.begin(), formatted_grid.end())));
+        for (std::vector<double>::iterator i = formatted_grid.begin(); i < formatted_grid.end(); i++)
+            *i = *i / maximum;
         return formatted_grid;
     }
 
@@ -806,11 +811,11 @@ void build_bitmap(std::vector<double> &intensity, const uint64_t &width, const u
             std::cout << "Error: Intensity map not suitable for bitmap build";
             exit(0);
         }
-        uint8_t blue = static_cast<uint8_t>(75 * intensity[i] / 0.8);
+        uint8_t blue = static_cast<uint8_t>(0 * intensity[i]);
         outputbm.write((char *)&blue, sizeof(uint8_t));
-        uint8_t green = static_cast<uint8_t>(145 * intensity[i] / 0.3);
+        uint8_t green = static_cast<uint8_t>(140 * intensity[i]);
         outputbm.write((char *)&green, sizeof(uint8_t));
-        uint8_t red = static_cast<uint8_t>(250 * intensity[i] / 0.2);
+        uint8_t red = static_cast<uint8_t>(255 * intensity[i]);
         outputbm.write((char *)&red, sizeof(uint8_t));
     }
     outputbm.close();

@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 
             if (!std::strcmp(argv[2], "raw") or !std::strcmp(argv[2], "all"))
             {
-                std::string raw_title = project_title + "raw";
+                std::string raw_title = project_title + "-raw";
                 std::vector<double> map = spectra_map.show_raw();
                 uint32_t width = spectra_map.show_dimensions("width");
                 std::cout << "Raw width is: " << width << '\n';
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
             }
             if (!std::strcmp(argv[2], "grid") or !std::strcmp(argv[2], "all") or !std::strcmp(argv[2], "bmp"))
             {
-                std::string grid_title = project_title + "grid";
+                std::string grid_title = project_title + "-grid";
                 std::vector<double> formatted_map = spectra_map.show_formatted_grid();
                 uint32_t width = spectra_map.show_formatted_dimensions("width");
                 std::cout << "Formatted width is: " << width << '\n';
@@ -162,10 +162,10 @@ int main(int argc, char *argv[])
                 std::cout << "Raw width is: " << width << '\n';
                 uint64_t height = spectra_map.show_dimensions("length");
                 std::cout << "Raw height is: " << height << '\n';
-                external_plot(map, width, height, project_title);
+                external_plot(map, width, height, raw_title);
                 std::vector<double> x = spectra_map.show_axis("x");
                 std::vector<double> y = spectra_map.show_axis("y");
-                external_plot_axis(x, y, project_title);
+                external_plot_axis(x, y, raw_title);
             }
 
             if (!std::strcmp(argv[2], "grid") or !std::strcmp(argv[2], "all") or !std::strcmp(argv[2], "bmp"))
@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
                 uint64_t height = spectra_map.show_formatted_dimensions("length");
                 std::cout << "Formatted height is:" << height << '\n';
                 if (!std::strcmp(argv[2], "grid") or !std::strcmp(argv[2], "all"))
-                    external_plot(formatted_map, width, height, project_title);
+                    external_plot(formatted_map, width, height, grid_title);
                 if (!std::strcmp(argv[2], "bmp") or !std::strcmp(argv[2], "all"))
                     build_bitmap(formatted_map, width, height, project_title);
             }
