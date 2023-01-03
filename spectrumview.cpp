@@ -181,6 +181,8 @@ int main(int argc, char *argv[])
                 if (!std::strcmp(argv[2], "bmp") or !std::strcmp(argv[2], "all"))
                     build_bitmap(formatted_map, width, height, project_title);
             }
+            else
+                throw std::invalid_argument("Specified format not identified. Allowed format is: all, grid, raw, bmp");
         }
         else
         {
