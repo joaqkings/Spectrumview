@@ -97,7 +97,7 @@ std::vector<double> readfile(const fs::path &path, const std::string &axis)
         }
         else if (tab == line.size() - 1 or tab == std::string::npos)
         {
-            std::cout << "File " + path.string() + " is missing one or more values in a column.";
+            std::cout << "File " + path.string() + " is missing one or more values in a column or may be empty.";
             exit(0);
         }
         if (!axis.find("energy"))
