@@ -19,13 +19,13 @@ Spectrum view is an image processing tool to create spectrum maps out of point b
 3. *Creating the output file:* This program can create two kinds of files: '.txt' files that can later be processed in other languages or software and BMP files showing the spatial distribution of the intensity at a selected energy.
    * *The '.txt' files* can be for the raw matrix or a BMP formatted matrix.
      * If the raw matrix is requested 3 files will be created: one with the 2D matrix with fixed width columns, and two with the x and y axis values to properly define the dimensions. The reason of this, is that in some experiments the step size can be uneven and if there is no information about the size scale the map will not be spatially accurate even if it contains the proper information.
-     * If the formatted matrix is requested, the program creates a 2D matrix with even step size (pixel size) and with dimensions that have the appropriate values to be turned into a bitmap (the row and column dimensions are multiples of 4).* To fill the formatted 2D matrix with the information coming from the intensity of the raw map, the real dimensions are considered, every pixel has the intensity value from the lower position between the closest raw map position values for a given pixel.  
+     * If the formatted matrix is requested, the program creates a 2D matrix with even step size (pixel size) and with dimensions that have the appropriate values to be turned into a bitmap (the row and column dimensions are multiples of 4).* To fill the formatted 2D matrix with the information coming from the intensity of the raw map, the real dimensions are considered, every pixel has the intensity value from the lower position between the closest raw map position values for a given pixel. The intensity is normalized to the maximum measured intensity in the map.  
   The output '.txt' file will be the 2D matrix with fixed width columns, since the dimensions are adjusted in terms of a pixel size, no axis values are needed to get the correct proportions from the image.
    * The BMP file can only come from the formatted matrix, and provides the image processed as a bitmap, the color is set to show orange shades depending on the intensity values, although black and some other colors may appear under certain conditions.
 
 ***NOTE 1**: The aspect ratio might be slightly different if one of the dimensions is a multiple of 4 and the other one is not.
 
-***NOTE 2**: In this release the coordinate map should have one point at the coordinate (0,0) to avoid unusual behavior. Future work aims to fix this inconvenience in a future version.
+***NOTE 2**: In this release the coordinate map should have one point at the coordinate (0,0) to avoid unusual behavior: information may be lost in the formatted matrix and the bitmap. Future work aims to fix this inconvenience in a future version. The program will still run if this is the case, as the information generated can be useful for quick visualization of a large amount of the data. 
 
 As mentioned above, this program uses the header file "spectrum_map.hpp" where input, output and processing functions are written. The header file can be used independently for custom software if desired.
 
@@ -182,7 +182,8 @@ There are 3 main elements within this header file: the input functions, the expe
   1. Arguments - Specify the direction of the dimension of interest can be `"width"` or `"length"`.
   2. Returns - `uint32_t` with the size of the specified dimension.
 
-* `show_formatted_grid()`: A function that takes the raw map, and resizes it to have even pixel sized steps with the required characteristics to build a BMP file. It returns a 2D flattened matrix with the resized shape. Intensity is filled making sure to keep the information from the raw map.
+* `show_formatted_grid()`: A function that takes the raw map, and resizes it to have even pixel sized steps with the required characteristics to build a BMP file. It returns a 2D flattened matrix with the resized shape. Intensity is filled making sure to keep the information from the raw map. After filling the map with the raw intensity, it is then normalized to the maximum registered intensity to keep consistency on the color shading for the BMP file.
+**NOTE:** If there is not a point for the (0,0) point, the formatted matrix and the BMP file will have missing information. Future work is planned to fix this issue. The program will still run if this is the case, as the information generated can be useful for quick visualization of a large amount of the data. 
 
   1. Returns - `std::vector<double>` 2D flattened matrix with the resized dimensions and suitable for BMP file.  
 
