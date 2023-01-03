@@ -183,7 +183,8 @@ There are 3 main elements within this header file: the input functions, the expe
   2. Returns - `uint32_t` with the size of the specified dimension.
 
 * `show_formatted_grid()`: A function that takes the raw map, and resizes it to have even pixel sized steps with the required characteristics to build a BMP file. It returns a 2D flattened matrix with the resized shape. Intensity is filled making sure to keep the information from the raw map. After filling the map with the raw intensity, it is then normalized to the maximum registered intensity to keep consistency on the color shading for the BMP file.
-**NOTE:** If there is not a point for the (0,0) point, the formatted matrix and the BMP file will have missing information. Future work is planned to fix this issue. The program will still run if this is the case, as the information generated can be useful for quick visualization of a large amount of the data. 
+
+   **NOTE:** If there is not a point for the (0,0) coordinate, the formatted matrix and the BMP file will have missing information. Future work is planned to fix this issue. The program will still run if this is the case, as the information generated can be useful for quick visualization of a large amount of the data. 
 
   1. Returns - `std::vector<double>` 2D flattened matrix with the resized dimensions and suitable for BMP file.  
 
