@@ -43,7 +43,7 @@ The syntax for the command line is the following:
 
 1. 'Path to directory': Must be a path to a directory not to a file, where all the acquired spectra for the map is stored.
 
-2. Format has 4 options:
+2. Format has 4 options, in the command line instruction all letters are lower case:
 
    * All: Creates the files of both the raw and formatted grid and the BMP file.
 
