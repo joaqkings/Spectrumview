@@ -98,7 +98,7 @@ In this case, 5 output files will be created: the raw map as a matrix in a text 
 
 Example:
 
-```./spectrumview.cpp 'C:/Users/ID/Documents/Experiments/EELS Map files' bmp integrated 3 map_one 0.096```
+```./spectrumview 'C:/Users/ID/Documents/Experiments/EELS Map files' bmp integrated 3 map_one 0.096```
 
 For this example, the integration window will consider 3 energy values above and 3 energy values below 0.096 eV assuming that the energy axis goes from 0 to 1 in steps of 0.005 eV. The output file will be the bitmap.
 
