@@ -43,7 +43,7 @@ The syntax for the command line is the following:
 
 1. 'Path to directory': Must be a path to a directory not to a file, where all the acquired spectra for the map is stored.
 
-2. Format has 4 options, in the command line instruction all letters are lower case:
+2. Format has 4 options:
 
    * All: Creates the files of both the raw and formatted grid and the BMP file.
 
@@ -52,6 +52,8 @@ The syntax for the command line is the following:
    * Grid: Creates only the file from the formatted grid to plot in a third party software.
 
    * bmp: Creates only the BMP file.
+   
+   **All formats should be written with lower case letters in the command line.**
 
 3. Intensity_mode is: interpolated
    * Looks for the nearest energies below and above the requested energy value, extrapolation is not supported. To calculate the intensity at the requested energy, linear interpolation is used:
@@ -67,7 +69,7 @@ Example:
 
 In this case, 5 output files will be created: the raw map as a matrix in a text file, the x and y axis values as two separate text files, the formatted map as a matrix in a different text file and the BMP file with the RGB figure. Both maps intensities are defined from an interpolation to get the intensity at 0.096 eV.
 
-**Syntax for extraction with integrated_intensity:**
+**Syntax for extraction with the integrated intensity method:**
 
 `./spectrumview + 'Path to directory' +  format + integrated + channels + output_file + energy`
 
@@ -82,6 +84,8 @@ In this case, 5 output files will be created: the raw map as a matrix in a text 
    * Grid: Creates only the file from the formatted grid to plot in a third party software.
 
    * bmp: Creates only the BMP file.
+   
+   **All formats should be written with lower case letters in the command line.**
 
 3. Intensity_mode is: integrated.
    * The integration is performed as the sum of all the intensity values within the integration limits.
