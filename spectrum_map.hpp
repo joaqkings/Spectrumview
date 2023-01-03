@@ -459,7 +459,7 @@ public:
     {
         if (x_handle.at(0) != 0 or y_handle.at(0) != 0)
         {
-            std::cout << "Please note that if the initial point of coordinates is not (0,0) unusual behaviour may occur with the bitmap and formatted grid on this release." << '\n'
+            std::cout << "Please note that if no point exists for coordinates (0,0), unusual behaviour may occur with the bitmap and formatted grid on this release." << '\n'
                       << "Future work will look for a way to fix such inconvenience." << '\n';
         }
 
